@@ -13,16 +13,21 @@ import { QUERY_PRODUCTS } from "../utils/queries";
 import { idbPromise } from "../utils/helpers";
 import spinner from '../assets/spinner.gif'
 import Cart from '../components/Cart';
+import { useSelector, useDispatch } from 'react-redux'
 
 function Detail() {
-  const [state, dispatch] = useStoreContext();
+  const dispatch = useDispatch()
+  const selectCart = state => state.cart;
+  const cart = useSelector(selectCart)
+  const selectProducts = state => state.products;
+  const products = useSelector(selectProducts)
+
+
   const { id } = useParams();
 
   const [currentProduct, setCurrentProduct] = useState({})
 
   const { loading, data } = useQuery(QUERY_PRODUCTS);
-
-  const { products, cart } = state;
 
   useEffect(() => {
     // already in global store
@@ -102,7 +107,7 @@ function Detail() {
             <strong>Price:</strong>
             ${currentProduct.price}
             {" "}
-            <button>
+            <button onClick={addToCart}>
               Add to Cart
             </button>
             <button 
