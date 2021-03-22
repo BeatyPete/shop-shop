@@ -11,6 +11,13 @@ import Signup from "./pages/Signup";
 import Nav from "./components/Nav";
 import { StoreProvider } from "./utils/GlobalState";
 import OrderHistory from "./pages/OrderHistory";
+import { Provider } from 'react-redux'
+
+import store from './utils/store'
+const stink = () => {
+  console.log(store.getState())
+}
+stink()
 
 const client = new ApolloClient({
   request: (operation) => {
@@ -29,17 +36,17 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <div>
-          <StoreProvider>
+          <Provider store={store}>
             <Nav />
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route exact path="/login" component={Login} />
+              {/* <Route exact path="/login" component={Login} />
               <Route exact path="/signup" component={Signup} />
               <Route exact path="/orderHistory" component={OrderHistory} />
               <Route exact path="/products/:id" component={Detail} />
-              <Route component={NoMatch} />
+              <Route component={NoMatch} /> */}
             </Switch>
-          </StoreProvider>
+            </Provider>
         </div>
       </Router>
     </ApolloProvider>

@@ -8,11 +8,16 @@ import './style.css';
 import { useStoreContext } from '../../utils/GlobalState';
 import { QUERY_CHECKOUT } from '../../utils/queries';
 import { loadStripe } from '@stripe/stripe-js';
+import { useSelector, useDispatch } from 'react-redux'
 
 const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 
 const Cart = () => {
-    const [state, dispatch] = useStoreContext();
+  const dispatch = useDispatch()
+  const selectCart = state => state.cart;
+  const cart1 = useSelector(selectCart)
+  const selectCartOpen = state => state.cartOpen;
+  const cartOpen = useSelector(selectCartOpen)
     /* The data variable will contain the checkout session, but only after the query is called with the getCheckout() function. */
     const [getCheckout, { data }] = useLazyQuery(QUERY_CHECKOUT);
 
@@ -22,17 +27,17 @@ const Cart = () => {
         dispatch({ type: ADD_MULTIPLE_TO_CART, products: [...cart] });
       };
     
-      if (!state.cart.length) {
+      if (!cart1.length) {
         getCart();
       }
-    }, [state.cart.length, dispatch]);
+    }, [cart1.length, dispatch]);
 
     function toggleCart() {
     dispatch({ type: TOGGLE_CART });
     }
     function calculateTotal() {
         let sum = 0;
-        state.cart.forEach(item => {
+        cart1.forEach(item => {
           sum += item.price * item.purchaseQuantity;
         });
         return sum.toFixed(2);
@@ -41,7 +46,7 @@ const Cart = () => {
       function submitCheckout() {
         const productIds = [];
       
-        state.cart.forEach((item) => {
+        cart1.forEach((item) => {
           for (let i = 0; i < item.purchaseQuantity; i++) {
             productIds.push(item._id);
           }
@@ -60,7 +65,7 @@ const Cart = () => {
         }
       }, [data]);
 
-    if (!state.cartOpen) {
+    if (!cartOpen) {
         return (
           <div className="cart-closed" onClick={toggleCart}>
             <span
@@ -73,9 +78,9 @@ const Cart = () => {
     <div className="cart">
   <div className="close" onClick={toggleCart}>[close]</div>
   <h2>Shopping Cart</h2>
-  {state.cart.length ? (
+  {cart1.length ? (
     <div>
-      {state.cart.map(item => (
+      {cart1.map(item => (
         <CartItem key={item._id} item={item} />
       ))}
       <div className="flex-row space-between">
