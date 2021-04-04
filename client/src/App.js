@@ -9,7 +9,6 @@ import NoMatch from "./pages/NoMatch";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Nav from "./components/Nav";
-import { StoreProvider } from "./utils/GlobalState";
 import OrderHistory from "./pages/OrderHistory";
 import { Provider } from 'react-redux'
 
@@ -28,6 +27,7 @@ const client = new ApolloClient({
       }
     })
   },
+  /* uses proxy in package.json for local host 3001 */
   uri: '/graphql',
 })
 
